@@ -1,29 +1,51 @@
 ### Titanium Native Firebase Module for Android
+forked from https://github.com/Android-Embed/ti-firebase
 
-## Setup
-Compile the native module and install into your app. Than drop example/lib/firebase.js into your app/lib directory and use in your app:
+## Example
+example/lib/firebase.js into your app/lib directory and use in your app:
 
-    var Firebase = require('firebase');
-    var firebase = new Firebase();
+	var Firebase = require('firebase');
+	var firebase = new Firebase();
 
-    var data = {
-		"data" : {
-			"id":"123",
-			"this":"is",
-			"a":"example"
+	var settingsChangeHandler = function(data) {
+
+		Ti.API.info("remote data changed: " + data);
+		// do something with the remote data
+		var remote = JSON.parse(data);
+
+	}; 
+
+	firebase.connect({
+		complete:function(data) {
+			Ti.API.info("Firebase Connected: " + JSON.stringify(data));
+			// create a new child listener on /settings
+			firebase.child({path:"settings",change:settingsChangeHandler});
 		}
-	}
-
-	firebase.push({
-		collection:"root",
-		data:data
 	});
+
+	// Create a new node
+	function push() {
+
+		var data = {
+			"data" : {
+				"id":"123",
+				"this":"is",
+				"a":"example"
+			}
+		}
+
+		firebase.push({
+			collection:"root",
+			data:data
+		});
+
+	}
 
 ## Titanium Studio
 Compile the module into your titanium project. From Titanium Studio, in the app explorer,  Click "Publish" and "Package Android Module". This will compile and package into your Titanium Project.
 
 ## Manual Install
-Just unzip the dist/com.mlabieniec.ti.firebase-android-0.1.0.zip to your modules/android/ folder, and select it (or add it to) from the available modules in your tiapp.xml.
+Just unzip the com.boxoutthinkers.ti.firebase-android-0.1.1.zip to your Titanium project folder, and select it (or add it to) from the available modules in your tiapp.xml.
 
 This is a native module for communicating with Firebase. It allows you to listen for change events on firebase collections. This is a work in progress and offers minimal functionality right now. Soon we will have an alloy sync adapter that abstracts the Firebase logic so that you can work with standard models in alloy.
 	
@@ -51,7 +73,6 @@ This is a native module for communicating with Firebase. It allows you to listen
         	...
         },
         complete:funciton(e) {
-        	Ti.API.info("Firebase authenticated and connected");
+        	Ti.API.info("Firebase authenticated and connected");        	
         }
     );
->>>>>>> 6615b8b5d939a9d08168baf0671335c8c4260304
