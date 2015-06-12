@@ -40,7 +40,8 @@ function Firebase(ref) {
 			if (!args.path) { Ti.API.error("No child specified"); return; };
 			Ti.API.debug("Adding Listener to Firebase child: " + args.path);
 			var changeHandler = (args.change)?args.change:null;
-			instance.valueListener(args.path,args.change);
+			var eventType = (args.eventType)?args.eventType:"child_added child_changed child_removed child_moved";
+			instance.childListener(args.path,changeHandler,eventType);
 		} else {
 			Ti.API.error("Tried adding a child but NOT connected");
 		}

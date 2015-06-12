@@ -367,32 +367,37 @@ public class FirebasetiModule extends KrollModule
 	}
 	
 	@Kroll.method
-	public void childListener(String ref, KrollFunction change) {
+	public void childListener(String ref, KrollFunction change, final String eventType) {
 		
 		if (events != null) {
 			
 			final KrollFunction changeHandler = change;
 			Firebase ch = events.child(ref);
 			Log.d(TAG,"adding childListener: " + ref);
+			
 			ch.addChildEventListener(new ChildEventListener() {
 				
 				HashMap<String, Object> args = new HashMap<String, Object>();
 				String json;
-				
+			
 				@Override
 				public void onChildRemoved(DataSnapshot snapshot) {
-					json = new Gson().toJson(snapshot.getValue());
-		        	args.put("callback", changeHandler);
-					args.put("data", json);
-					callThisCallbackDirectly(args);
+					if (eventType.contains("child_removed")) {
+						json = new Gson().toJson(snapshot.getValue());
+			        	args.put("callback", changeHandler);
+						args.put("data", json);
+						callThisCallbackDirectly(args);
+					}
 				}
 				
 				@Override
 				public void onChildMoved(DataSnapshot snapshot, String arg1) {
-					json = new Gson().toJson(snapshot.getValue());
-		        	args.put("callback", changeHandler);
-					args.put("data", json);
-					callThisCallbackDirectly(args);
+					if (eventType.contains("child_moved")) {
+						json = new Gson().toJson(snapshot.getValue());
+			        	args.put("callback", changeHandler);
+						args.put("data", json);
+						callThisCallbackDirectly(args);
+					}
 				}
 				
 				/**
@@ -402,18 +407,22 @@ public class FirebasetiModule extends KrollModule
 				 */
 				@Override
 				public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
-		        	json = new Gson().toJson(snapshot.getValue());
-		        	args.put("callback", changeHandler);
-					args.put("data", json);
-					callThisCallbackDirectly(args);
+					if (eventType.contains("child_changed")) {
+			        	json = new Gson().toJson(snapshot.getValue());
+			        	args.put("callback", changeHandler);
+						args.put("data", json);
+						callThisCallbackDirectly(args);
+					}
 				}
 				
 				@Override
 				public void onChildAdded(DataSnapshot snapshot, String arg1) {
-					json = new Gson().toJson(snapshot.getValue());
-		        	args.put("callback", changeHandler);
-					args.put("data", json);
-					callThisCallbackDirectly(args);
+					if (eventType.contains("child_added")) {
+						json = new Gson().toJson(snapshot.getValue());
+			        	args.put("callback", changeHandler);
+						args.put("data", json);
+						callThisCallbackDirectly(args);
+					}
 				}
 				
 				@Override
