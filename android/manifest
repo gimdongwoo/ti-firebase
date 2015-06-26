@@ -6,9 +6,9 @@ version: 0.1.2
 apiversion: 2
 architectures: armeabi armeabi-v7a x86
 description: Native Android Firebase Titanium Module
-author: Boxout Thinkers Inc.
+author: Boxout Thinkers Inc. (original by Michael Labieniec)
 license: GPL
-copyright: 2015
+copyright: Copyright (c) 2015 Boxout Thinkers Inc & Michael Labieniec
 
 # these should not be edited
 name: titanium-firebase
