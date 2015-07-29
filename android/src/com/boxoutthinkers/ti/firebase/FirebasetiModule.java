@@ -51,13 +51,7 @@ public class FirebasetiModule extends KrollModule
 	
 	private Firebase events;
 	private ValueEventListener connectedListener;
-	private DataSnapshot data;
 	
-	// The JavaScript callbacks (KrollCallback objects)
-	private KrollFunction successCallback = null;
-	private KrollFunction cancelCallback = null;
-	private KrollFunction requestDataCallback = null;
-	private KrollFunction connectedCallback = null;
 
 	// You can define constants with @Kroll.constant, for example:
 	// @Kroll.constant public static final String EXTERNAL_NAME = value;
@@ -144,25 +138,21 @@ public class FirebasetiModule extends KrollModule
 		if (args.containsKey("success")) {
 			callback = args.get("success");
 			if (callback instanceof KrollFunction) {
-				successCallback = (KrollFunction)callback;
 			}
 		}
 		if (args.containsKey("cancel")) {
 			callback = args.get("cancel");
 			if (callback instanceof KrollFunction) {
-				cancelCallback = (KrollFunction)callback;
 			}
 		}	
 		if (args.containsKey("requestData")) {
 			callback = args.get("requestData");
 			if (callback instanceof KrollFunction) {
-				requestDataCallback = (KrollFunction)callback;
 			}
 		}
 		if (args.containsKey("connected")) {
 			callback = args.get("connected");
 			if (callback instanceof KrollFunction) {
-				connectedCallback = (KrollFunction)callback;
 			}
 		}
 
@@ -278,7 +268,6 @@ public class FirebasetiModule extends KrollModule
 			    @Override
 			    public void onDataChange(DataSnapshot snap) {
 			        Log.d(TAG,snap.getName() + " -> " + snap.getValue());
-			        data = snap;
 			        if (changeHandler != null) {
 			        	HashMap<String, Object> args = new HashMap<String, Object>();
 			        	String json = new Gson().toJson(snap.getValue());
@@ -378,14 +367,16 @@ public class FirebasetiModule extends KrollModule
 			ch.addChildEventListener(new ChildEventListener() {
 				
 				HashMap<String, Object> args = new HashMap<String, Object>();
-				String json;
+				String jsonValue;
+				String jsonKey;
 			
 				@Override
 				public void onChildRemoved(DataSnapshot snapshot) {
 					if (eventType.contains("child_removed")) {
-						json = new Gson().toJson(snapshot.getValue());
+						jsonValue = new Gson().toJson(snapshot.getValue());
+						jsonKey = new Gson().toJson(snapshot.getName());
 			        	args.put("callback", changeHandler);
-						args.put("data", json);
+						args.put("data", "{\"val\":"+jsonValue+",\"key\":"+jsonKey+"}");
 						callThisCallbackDirectly(args);
 					}
 				}
@@ -393,9 +384,10 @@ public class FirebasetiModule extends KrollModule
 				@Override
 				public void onChildMoved(DataSnapshot snapshot, String arg1) {
 					if (eventType.contains("child_moved")) {
-						json = new Gson().toJson(snapshot.getValue());
+						jsonValue = new Gson().toJson(snapshot.getValue());
+						jsonKey = new Gson().toJson(snapshot.getName());
 			        	args.put("callback", changeHandler);
-						args.put("data", json);
+			        	args.put("data", "{\"val\":"+jsonValue+",\"key\":"+jsonKey+"}");
 						callThisCallbackDirectly(args);
 					}
 				}
@@ -408,9 +400,10 @@ public class FirebasetiModule extends KrollModule
 				@Override
 				public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
 					if (eventType.contains("child_changed")) {
-			        	json = new Gson().toJson(snapshot.getValue());
+						jsonValue = new Gson().toJson(snapshot.getValue());
+						jsonKey = new Gson().toJson(snapshot.getName());
 			        	args.put("callback", changeHandler);
-						args.put("data", json);
+			        	args.put("data", "{\"val\":"+jsonValue+",\"key\":"+jsonKey+"}");
 						callThisCallbackDirectly(args);
 					}
 				}
@@ -418,9 +411,10 @@ public class FirebasetiModule extends KrollModule
 				@Override
 				public void onChildAdded(DataSnapshot snapshot, String arg1) {
 					if (eventType.contains("child_added")) {
-						json = new Gson().toJson(snapshot.getValue());
+						jsonValue = new Gson().toJson(snapshot.getValue());
+						jsonKey = new Gson().toJson(snapshot.getName());
 			        	args.put("callback", changeHandler);
-						args.put("data", json);
+			        	args.put("data", "{\"val\":"+jsonValue+",\"key\":"+jsonKey+"}");
 						callThisCallbackDirectly(args);
 					}
 				}
