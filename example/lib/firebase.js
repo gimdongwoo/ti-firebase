@@ -89,6 +89,16 @@ function Firebase(ref) {
 	};
 	
 	/**
+	 * Firebase Connection Method
+	 */
+	this.goOnline = function() {
+		instance.goOnline();
+	};
+	this.goOffline = function() {
+		instance.goOffline();
+	};
+	
+	/**
 	 * Check if a Firebase is connected
 	 */
 	this.isConnected = false;

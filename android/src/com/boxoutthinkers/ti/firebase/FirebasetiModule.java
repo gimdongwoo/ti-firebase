@@ -493,8 +493,9 @@ public class FirebasetiModule extends KrollModule
 	}
 	
 	/**
-	 * Push a new item to a dataset
-	 * @param args HashMaps {collection:'events', data:{...}}
+	 * Set the data at this location to the given value.
+	 * @param collection
+	 * @param args
 	 */
 	@Kroll.method
 	public void setValue(String collection, HashMap args) 
@@ -502,10 +503,30 @@ public class FirebasetiModule extends KrollModule
 		events.getRoot().child(collection).setValue(args);
 	}
 	
+	/**
+	 * Update the specific child keys to the specified values.
+	 * @param collection
+	 * @param map
+	 */
 	@Kroll.method
 	public void updateChildren(String collection, HashMap map) 
 	{
 		events.getRoot().child(collection).updateChildren(map);
+	}
+	
+	/**
+	 * Firebase Connection Method
+	 */
+	@Kroll.method
+	public void goOnline()
+	{
+		Firebase.goOnline();
+	}
+	
+	@Kroll.method
+	public void goOffline()
+	{
+		Firebase.goOffline();
 	}
 
 }
